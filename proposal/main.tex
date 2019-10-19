@@ -1,0 +1,66 @@
+\documentclass[letterpaper, 11pt]{article}
+
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[letterpaper,margin=0.75in]{geometry}
+\usepackage{textcomp}
+\usepackage[english]{babel}
+\usepackage{libertine}
+\usepackage{indentfirst}
+\usepackage[pdftex]{graphicx}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\setlength\parindent{0pt}
+\usepackage{fancyhdr}
+\usepackage{bbm}
+\usepackage{physics}
+\usepackage{bbm}
+\usepackage{subfig}
+\usepackage[usenames,dvipsnames]{color} 
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{nopageno}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\setlength\parindent{24pt}
+
+\title{CS 229 - Project Proposal \\ Machine Learning for Yelp rating prediction}
+\author{Frederik Johan Mellbye - frederme\\Pranav Bhardwaj - pranavb\\Nicolas Bievre - nbievre\\\textbf{Category:} General Machine Learning}
+\date{\vspace{1ex}}
+
+\begin{document}
+
+\maketitle
+
+Founded in 2004, Yelp is today one of the most widely used restaurant and merchant information platforms across the United States. Yelp has a strong social aspect: each Yelp account has a friend list which can be populated by connecting the app with Facebook. Plus, it encourages its users to leave reviews and star ratings of their experience with each business they visit. In order to improve its service and to have a better understanding of the trends happening on the platform, Yelp release the $13^{th}$ round of its \href{https://www.yelp.com/dataset/challenge}{data challenge} encouraging students to conduct academic research. For our CS 229 project, we chose to participate in the Yelp data challenge, the deadline of which is on December 31st, 2019.\\
+
+The Yelp data set consists of over $6$ million reviews of nearly 200,000 businesses from $1.7$ million users. This includes:
+\begin{itemize}
+    \item Business information (location, category,...)
+    \item Reviews as a star value and as the actual text posted
+    \item User information such as friends on Yelp and average rating
+\end{itemize}
+
+Our goal for this project is to implement machine leaning models to predict the star ratings that a customer is likely to give to businesses that he or she has not yet visited. This is an application problem. We plan to leverage the network structure latent within the data to construct a graph. Nodes will consist of users and businesses, while edges will represent business ratings or user friendships. \\
+
+For our prediction we will use a variety of techniques, examining how the utilization of different input effects performance. Supervised learning algorithms can be constructed using user and business attributes. Natural language processing can be used to extract sentiment from reviews. Graph machine learning, which has already been used for recommendation models \cite{LI2013880}, can leverage the network structure described above. \\
+
+To evaluate our model, we will create a train-validation-test split over the set of all user-business-rating instances. Performance metrics can be made by measures of deviance in predicted rating such as residual sum of squares. More interesting tasks can be created too, such as constructing recommendations (from predicted reviews above 4.0 stars) and evaluating whether users like (>4.0 stars), dislike (<3.0 stars), or feel neutral about the recommendation. 
+
+
+\bibliographystyle{unsrt}
+\bibliography{biblio.bib}
+
+
+\end{document}
