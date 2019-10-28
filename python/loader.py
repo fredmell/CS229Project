@@ -9,14 +9,22 @@ class DataLoader:
         pass
 
     def load_review(self):
-        
+        """ This .json file is 5 Gigs. Need to use pd.read_json in multiple
+        batches, or manually read line by line.
+        TODO: Find appropriate way to load this file and extract parts of data
+        without running out of RAM.
+
+        """
+        pass
 
     def load_user(self):
         """ This .json file is 2.3 Gigs. Need to use pd.read_json in multiple
         batches, or manually read line by line.
-        TODO: Find appropriate way to load this file and extract parts of data.
+        TODO: Find appropriate way to load this file and extract parts of data,
+        without running out of RAM.
 
         """
+        pass
 
     def load_business(self, min_reviews=50, rm_cols=True, save_csv=False):
         """ Business file.
