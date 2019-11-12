@@ -13,7 +13,7 @@ class DataLoader:
     the reviews of their text and then write this resulting dataframe to csv.
 
     Then run make_combined to make a combined dataframe with review, user and
-    business data for the first n reviews. 
+    business data for the first n reviews.
     """
     def __init__(self, path="../data/"):
         self.path = path
@@ -91,6 +91,7 @@ class DataLoader:
         merged = pd.merge(review, business, on="business_id")
         merged = pd.merge(merged, user, on="user_id")
         t = time.time() - t0
+        print("Merged {} observations in {} seconds".format(n, t))
 
         print(merged)
         print(merged.columns)
@@ -100,4 +101,4 @@ class DataLoader:
 
 if __name__ == "__main__":
     loader = DataLoader()
-    df = loader.make_combined(100)
+    df = loader.make_combined()
