@@ -1,51 +1,51 @@
 import json
 import os
 import pandas as pd
+import time
 
 
 class DataLoader:
-    """ Load and do very basic preprocessing on data """
+    """ Load and do very basic preprocessing on data.
+
+    Put the data files in a directory named data, in the repository.
+
+    To make the combined dataset, first run the to_csv method to strip
+    the reviews of their text and then write this resulting dataframe to csv.
+
+    Then run make_combined to make a combined dataframe with review, user and
+    business data for the first n reviews.
+    """
     def __init__(self, path="../data/"):
         self.path = path
 
-    def load_review(self, n=None, chunksize=1000000):
-        """ This .json file is 5 Gigs. Need to use pd.read_json in multiple
-        batches, or manually read line by line.
-        TODO: Find appropriate way to load this file and extract parts of data
-        without running out of RAM.
+    def to_csv(self):
+        df = pd.read_json(self.path + "review.json", lines=True)
+        df.drop(['text'], axis=1, inplace=True)
+        df.to_csv("../data/review.csv")
+
+    def load_review(self, n=None):
+        """
 
         Args:
             n         (int) : Number of reviews to read. Defaults to None, for
                               which all lines are read.
-            chunksize (int) : Number of json lines to read to RAM at a time.
-                              Defaults to a million. There are 66 million lines in the file.
 
         """
-        pass
+        df = pd.read_csv(self.path + "review.csv", nrows=n)
 
-    def load_user(self, chunksize=500000):
-        """ This .json file is 2.3 Gigs. Need to use pd.read_json in multiple
-        batches, or manually read line by line.
-        TODO: Find appropriate way to load this file and extract parts of data,
-        without running out of RAM.
+        return df
 
-        It seems we can use kwarg chunksize, read_json then returns an iterator,
-        which loads chunksize lines to RAM at a time.
-        https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_json.html
-        https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html#line-delimited-json
 
-        Perhaps not needed for user data, but definately needed for review data.
+    def load_user(self):
+        """
 
         """
-        reader = pd.read_json(self.path + "user.json",
-                              lines=True,
-                              chunksize=chunksize)
+        df = pd.read_json(self.path + "user.json", lines=True)
 
-        for chunk in reader:
-            print(chunk.memory_usage(deep=True).sum()/1e9, "GB")
+        return df
 
 
-    def load_business(self, min_reviews=50, rm_cols=True, save_csv=False, chunksize=None):
+    def load_business(self, min_reviews=1, rm_cols=False, save_csv=False):
         """ Business file.
 
         Args:
@@ -57,7 +57,7 @@ class DataLoader:
             df (pd.DataFrame) : Filtered business data
 
         """
-        df = pd.read_json("../data/business.json", lines=True, chunksize=chunksize)
+        df = pd.read_json("../data/business.json", lines=True)
 
         # Remove unwanted? columns. Can change this, e.g. pass list of
         # columns to remove
@@ -76,6 +76,29 @@ class DataLoader:
 
         return df
 
+    def make_combined(self, n=None, to_csv=False):
+        review = self.load_review(n)
+        review.drop(['Unnamed: 0'], axis=1, inplace=True)
+
+        print("Loading business")
+        business = self.load_business()
+        print("Loading user")
+        user = self.load_user()
+
+        print("Making merged dataframe")
+
+        t0 = time.time()
+        merged = pd.merge(review, business, on="business_id")
+        merged = pd.merge(merged, user, on="user_id")
+        t = time.time() - t0
+        print("Merged {} observations in {} seconds".format(n, t))
+
+        print(merged)
+        print(merged.columns)
+
+        merged.to_csv("../data/combined{}.csv".format(n))
+
+
 if __name__ == "__main__":
     loader = DataLoader()
-    user = loader.load_user()
+    df = loader.make_combined()
