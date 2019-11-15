@@ -8,6 +8,8 @@ import time
 
 # Models
 from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 # Metrics
 from sklearn.metrics import auc, roc_curve, roc_auc_score, precision_score, accuracy_score, recall_score, f1_score, precision_recall_curve
@@ -214,7 +216,6 @@ class BinaryClassifier:
 class logreg(BinaryClassifier):
     '''
     Child of class BinaryClassifier
-
     Creates logistic regression binary classification model
     '''
 
@@ -248,6 +249,7 @@ class logreg(BinaryClassifier):
                                        C = C,
                                        solver = solver,
                                        max_iter = max_iter)
+        # Initialize elasticnet model
         else:
             model = LogisticRegression(penalty = penalty,
                                        random_state = self.random_state,
@@ -264,6 +266,130 @@ class logreg(BinaryClassifier):
         end_time = time.time()
         print("Time to train: {:.2f}".format(end_time - start_time))
 
+        # Keep or return model
+        if keep:
+            self.model = model
+        else:
+            return model
+
+
+class DecisionTree(BinaryClassifier):
+    '''
+    Child of class BinaryClassifier
+    Creates Decision Tree binary classification model
+    '''
+    
+    def train(self, criterion = 'gini',
+                    max_depth = 4,
+                    keep = True):
+        '''
+        Train DecisionTreeClassifier
+        
+        @param criterion,    Optional: str, impurity measure (options: ['gini', 'entropy'])
+        @param max_depth,    Optional: int, max depth of tree
+        @param keep,         Optional: bool, if true, set model, if false, return model
+        '''
+        
+        # Start timer
+        start = time.time()
+        
+        # Initialize model
+        model = DecisionTreeClassifier(random_state = self.random_state,
+                                       criterion = criterion,
+                                       max_depth = max_depth)
+
+        # Train model
+        model.fit(self.train_data[self.predictors], 
+                  self.train_data[self.outcome])
+        
+        # Print training time
+        end = time.time()
+        print("Time to train: {:.2f}".format(end - start))
+        
+        
+        # Keep or return model
+        if keep:
+            self.model = model
+        else:
+            return model
+
+
+class RandomForest(BinaryClassifier):
+    '''
+    Child of class BinaryClassifier
+    Creates Random Forest binary classification model
+    '''
+    
+    def train(self, n_estimators = 10,
+                    criterion = 'gini',
+                    max_depth = 4,
+                    keep = True):
+        '''
+        Train RandomForestClassifier
+        
+        @param n_estimators, Optional: int, max number of trees in forest
+        @param criterion,    Optional: str, impurity measure (options: ['gini', 'entropy'])
+        @param max_depth,    Optional: int, max depth of each tree
+        @param keep,         Optional: bool, if true, set model, if false, return model
+        '''
+            
+        # Start timer
+        start = time.time()
+            
+        # Initialize model
+        model = RandomForestClassifier(n_estimators=n_estimators,
+                                        criterion = criterion,
+                                        max_depth = max_depth,
+                                        random_state = self.random_state)
+
+        # Train model
+        model.fit(self.train_data[self.predictors], 
+                  self.train_data[self.outcome])
+        
+        # Print training time
+        end = time.time()
+        print("Time to train: {:.2f}".format(end - start))
+        
+        # Keep or return model
+        if keep:
+            self.model = model
+        else:
+            return model
+
+
+class AdaBoost(BinaryClassifier):
+    '''
+    Child of class BinaryClassifier
+    Creates AdaBoost binary classification model
+    '''
+    
+    def train(self, n_estimators = 50,
+                    learning_rate = 1.0,
+                    keep = True):
+        '''
+        Train AdaBoostClassifier
+        
+        @param n_estimators,  Optional: int, max number of estimators where boosting is stopped
+        @param learning_rate, Optional: float, shrinks the contribution of each classifier
+        @param keep,         Optional: bool, if true, set model, if false, return model
+        '''
+        
+        # Start timer
+        start = time.time()
+            
+        # Initialize model
+        model = AdaBoostClassifier(n_estimators = n_estimators,
+                                    learning_rate = learning_rate,
+                                    random_state = self.random_state)
+
+        # Train model
+        model.fit(self.train_data[self.predictors], 
+                  self.train_data[self.outcome])
+
+        # Print training time
+        end = time.time()
+        print("Time to train: {:.2f}".format(end - start))
+        
         # Keep or return model
         if keep:
             self.model = model
