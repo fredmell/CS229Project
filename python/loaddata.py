@@ -79,11 +79,18 @@ class DataLoader:
     def make_combined(self, n=None, to_csv=False):
         review = self.load_review(n)
         review.drop(['Unnamed: 0'], axis=1, inplace=True)
+        review.columns = [colname+"_r" if (colname!="business_id" and colname!="user_id") else colname for colname in review.columns]
 
         print("Loading business")
         business = self.load_business()
+        business.columns = [colname+"_b" if (colname!="business_id" and colname!="user_id") else colname for colname in business.columns]
+
+        print(business.columns)
         print("Loading user")
         user = self.load_user()
+        user.columns = [colname+"_u" if (colname!="business_id" and colname!="user_id") else colname for colname in user.columns]
+
+        print(user.columns)
 
         print("Making merged dataframe")
 
@@ -93,12 +100,16 @@ class DataLoader:
         t = time.time() - t0
         print("Merged {} observations in {} seconds".format(n, t))
 
-        print(merged)
         print(merged.columns)
 
-        merged.to_csv("../data/combined{}.csv".format(n))
-
+        if n is not None:
+            merged.to_pickle("../data/combined{}.pkl".format(n))
+        else:
+            merged.to_pickle("../data/yelp_df.pkl")
 
 if __name__ == "__main__":
     loader = DataLoader()
     df = loader.make_combined()
+    #df = pd.read_pickle("../data/yelp_df.pkl")
+
+    # Make test train
