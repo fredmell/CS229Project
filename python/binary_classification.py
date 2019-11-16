@@ -196,10 +196,10 @@ class BinaryClassifier:
         axs[1].set_ylabel("Precision (PPV)")
 
         # Compute diagnostics
-        self.accuracy = self.performance_metric(measure = "Accuracy") * 100.0
-        self.f1 = self.performance_metric(measure = "F1") * 100.0
-        self.precision = self.performance_metric(measure = "Precision") * 100.0
-        self.recall = self.performance_metric(measure = "Recall") * 100.0
+        self.accuracy = self.performance_metric(measure = "Accuracy", prob_set = prob_set) * 100.0
+        self.f1 = self.performance_metric(measure = "F1", prob_set = prob_set) * 100.0
+        self.precision = self.performance_metric(measure = "Precision", prob_set = prob_set) * 100.0
+        self.recall = self.performance_metric(measure = "Recall", prob_set = prob_set) * 100.0
 
         if p:
             print("Accuracy:             %.2f%%" % self.accuracy)
