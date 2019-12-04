@@ -10,6 +10,7 @@ import time
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 # Metrics
 from sklearn.metrics import auc, roc_curve, roc_auc_score, precision_score, accuracy_score, recall_score, f1_score, precision_recall_curve
@@ -29,7 +30,7 @@ class BinaryClassifier:
         @param train_data       DataFrame with training set data
         @param valid_data       DataFrame with validation set data
         @param test_data        Dataframe with test set data
-        @param predictors       List of strings of column names of predictors 
+        @param predictors       List of strings of column names of predictors
         @param outcome          String with outcome column name
         @param threshold        Optional: Float, positive prediction cutoff
         @param random_state     Optional: int
@@ -46,7 +47,7 @@ class BinaryClassifier:
 
     def train(self, keep = True):
         '''
-        Dummy method for model training. Must be defined in child class. 
+        Dummy method for model training. Must be defined in child class.
 
         @param keep, Optional: Bool, if true save model, else return model
         '''
@@ -208,7 +209,7 @@ class BinaryClassifier:
             print("Recall (Sensitivity): %.2f%%" % self.recall)
             print("\n")
             plt.show()
-            
+
         else:
             return plt
 
@@ -227,7 +228,7 @@ class logreg(BinaryClassifier):
                     keep = True):
         '''
         Train logistic regression binary classifier
-        
+
         @param penalty,  Optional: String, type of regularization
                          Default: 'l2'
         @param C,        Optional: Float, Inverse of regularization strength, must be positive float
@@ -257,9 +258,9 @@ class logreg(BinaryClassifier):
                                        l1_ratio = l1_ratio,
                                        solver = solver,
                                        max_iter = max_iter)
-        
+
         # Train model
-        model.fit(self.train_data[self.predictors], 
+        model.fit(self.train_data[self.predictors],
                   self.train_data[self.outcome])
 
         # Print training time
@@ -278,35 +279,35 @@ class DecisionTree(BinaryClassifier):
     Child of class BinaryClassifier
     Creates Decision Tree binary classification model
     '''
-    
+
     def train(self, criterion = 'gini',
                     max_depth = 4,
                     keep = True):
         '''
         Train DecisionTreeClassifier
-        
+
         @param criterion,    Optional: str, impurity measure (options: ['gini', 'entropy'])
         @param max_depth,    Optional: int, max depth of tree
         @param keep,         Optional: bool, if true, set model, if false, return model
         '''
-        
+
         # Start timer
         start = time.time()
-        
+
         # Initialize model
         model = DecisionTreeClassifier(random_state = self.random_state,
                                        criterion = criterion,
                                        max_depth = max_depth)
 
         # Train model
-        model.fit(self.train_data[self.predictors], 
+        model.fit(self.train_data[self.predictors],
                   self.train_data[self.outcome])
-        
+
         # Print training time
         end = time.time()
         print("Time to train: {:.2f}".format(end - start))
-        
-        
+
+
         # Keep or return model
         if keep:
             self.model = model
@@ -319,23 +320,23 @@ class RandomForest(BinaryClassifier):
     Child of class BinaryClassifier
     Creates Random Forest binary classification model
     '''
-    
+
     def train(self, n_estimators = 10,
                     criterion = 'gini',
                     max_depth = 4,
                     keep = True):
         '''
         Train RandomForestClassifier
-        
+
         @param n_estimators, Optional: int, max number of trees in forest
         @param criterion,    Optional: str, impurity measure (options: ['gini', 'entropy'])
         @param max_depth,    Optional: int, max depth of each tree
         @param keep,         Optional: bool, if true, set model, if false, return model
         '''
-            
+
         # Start timer
         start = time.time()
-            
+
         # Initialize model
         model = RandomForestClassifier(n_estimators=n_estimators,
                                         criterion = criterion,
@@ -343,13 +344,13 @@ class RandomForest(BinaryClassifier):
                                         random_state = self.random_state)
 
         # Train model
-        model.fit(self.train_data[self.predictors], 
+        model.fit(self.train_data[self.predictors],
                   self.train_data[self.outcome])
-        
+
         # Print training time
         end = time.time()
         print("Time to train: {:.2f}".format(end - start))
-        
+
         # Keep or return model
         if keep:
             self.model = model
@@ -362,34 +363,67 @@ class AdaBoost(BinaryClassifier):
     Child of class BinaryClassifier
     Creates AdaBoost binary classification model
     '''
-    
+
     def train(self, n_estimators = 50,
                     learning_rate = 1.0,
                     keep = True):
         '''
         Train AdaBoostClassifier
-        
+
         @param n_estimators,  Optional: int, max number of estimators where boosting is stopped
         @param learning_rate, Optional: float, shrinks the contribution of each classifier
         @param keep,         Optional: bool, if true, set model, if false, return model
         '''
-        
+
         # Start timer
         start = time.time()
-            
+
         # Initialize model
         model = AdaBoostClassifier(n_estimators = n_estimators,
                                     learning_rate = learning_rate,
                                     random_state = self.random_state)
 
         # Train model
-        model.fit(self.train_data[self.predictors], 
+        model.fit(self.train_data[self.predictors],
                   self.train_data[self.outcome])
 
         # Print training time
         end = time.time()
         print("Time to train: {:.2f}".format(end - start))
-        
+
+        # Keep or return model
+        if keep:
+            self.model = model
+        else:
+            return model
+
+class GDA(BinaryClassifier):
+    '''
+    Child of class BinaryClassifier
+    Creates GDA (Gaussian discriminant analysis) binary classification model
+    '''
+
+    def train(self, keep = True):
+        '''
+        Train GDA
+
+        @param keep,         Optional: bool, if true, set model, if false, return model
+        '''
+
+        # Start timer
+        start = time.time()
+
+        # Initialize model
+        model = LinearDiscriminantAnalysis(priors=None) # Might want to change priors?
+
+        # Train model
+        model.fit(self.train_data[self.predictors],
+                  self.train_data[self.outcome])
+
+        # Print training time
+        end = time.time()
+        print("Time to train: {:.2f}".format(end - start))
+
         # Keep or return model
         if keep:
             self.model = model
