@@ -120,19 +120,17 @@ class Preprocess:
         counts = self.count_categories()
 
         new_columns = []
-        for category, num in counts:
+        for category, num in tqdm(counts):
             if num >= obs_thresh:
                 new_columns.append(category)
-                self.df[category] = 0
-
-        for i in tqdm(range(len(self.df))):
-            categories = self.df['categories'][i].split(",")
-            categories = [elm[1:] if elm[0] == ' ' else elm for elm in categories]
-            for column in categories:
-                self.df.loc[i, column] = 1
+                self.df[category] = 1
+                self.df[category].where(df.categories.str.contains(category),
+                                        0,
+                                        inplace=True)
 
     def sort_by_date(self):
         self.df.sort_values(by='date', axis=0, inplace=True)
+        self.df.reset_index(drop=True)
 
     def dump(self, filename="../data/yelp_df.pkl"):
         self.df.to_pickle(filename)
