@@ -4,6 +4,7 @@ import time
 import utils
 import warnings
 
+from tqdm import tqdm
 from loaddata import DataLoader
 from cat_to_num import *
 
@@ -124,12 +125,11 @@ class Preprocess:
                 new_columns.append(category)
                 self.df[category] = 0
 
-        for i in range(len(self.df)):
+        for i in tqdm(range(len(self.df))):
             categories = self.df['categories'][i].split(",")
             categories = [elm[1:] if elm[0] == ' ' else elm for elm in categories]
-            for column in new_columns:
-                if column in categories:
-                    self.df.loc[i, column] = 1
+            for column in categories:
+                self.df.loc[i, column] = 1
 
     def sort_by_date(self):
         self.df.sort_values(by='date', axis=0, inplace=True)
