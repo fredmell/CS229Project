@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import time
 import utils
-import warnings
 
 from tqdm import tqdm
 from loaddata import DataLoader
@@ -48,9 +47,12 @@ class Preprocess:
 
         for j, column in enumerate(self.df):
             if column in cat_to_num_mapping:
-                self.df[column] = self.df[column].map(lambda x: cat_to_num_mapping[column][x], na_action="ignore")
+                mapping = lambda x: cat_to_num_mapping[column][x]
+                self.df[column] = self.df[column].map(mapping,
+                                                      na_action="ignore")
             else:
-                self.df[column] = pd.to_numeric(self.df[column], errors="ignore")
+                self.df[column] = pd.to_numeric(self.df[column],
+                                                errors="ignore")
 
             print('{:03d} {:35s}'.format(j, column), type(self.df[column][0]))
 
@@ -61,7 +63,13 @@ class Preprocess:
 
         """
         # Fill missing values with mode
-        ignored_columns = ['review_id', 'business_id', 'user_id', 'postal_code', 'categories', 'date']
+        ignored_columns = ['review_id',
+                           'business_id',
+                           'user_id',
+                           'postal_code',
+                           'categories',
+                           'date']
+
         for j, column in enumerate(self.df):
             if column not in ignored_columns:
                 try:
@@ -124,7 +132,7 @@ class Preprocess:
             if num >= obs_thresh:
                 new_columns.append(category)
                 self.df[category] = 1
-                self.df[category].where(df.categories.str.contains(category),
+                self.df[category].where(self.df.categories.str.contains(category),
                                         0,
                                         inplace=True)
 
