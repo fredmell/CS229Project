@@ -2,7 +2,7 @@ import numpy as np
 
 cat_to_num_mapping = {'AcceptsInsurance': {np.nan: np.nan, 'True': 1, 'False': 0, 'None': 0},
                       'AgesAllowed': {np.nan: np.nan, 'None': 0, '18plus': 1, '19plus': 2, '21plus': 3, 'allages': 4},
-                      'Alcohol': {np.nan: np.nan, 'None': 0, 'none': 0, 'full_bar': 1, 'beer_and_wine': 2},
+                      'Alcohol': {np.nan: np.nan, 'None': 0, 'none': 0, 'full_bar': 1, 'beer_and_wine': 1},
                       'Ambience': {np.nan: np.nan, 'None': 0},
                       'Ambience_casual': {np.nan: np.nan, 'True': 1, 'False': 0},
                       'Ambience_classy': {np.nan: np.nan, 'False': 0, 'True': 1},
@@ -85,7 +85,7 @@ cat_to_num_mapping = {'AcceptsInsurance': {np.nan: np.nan, 'True': 1, 'False': 0
                       'RestaurantsReservations': {np.nan: np.nan, 'False': 0, 'None': 0, 'True': 1},
                       'RestaurantsTableService': {np.nan: np.nan, 'True': 1, 'False': 0, 'None': 0, 'none': 0},
                       'RestaurantsTakeOut': {np.nan: np.nan, 'True': 1, 'False': 0, 'None': 0},
-                      'Smoking': {np.nan: np.nan, 'None': 0, 'outdoor': 2, 'yes': 1, 'no': 0},
+                      'Smoking': {np.nan: np.nan, 'None': 0, 'outdoor': 1, 'yes': 1, 'no': 0},
                       'WheelchairAccessible': {np.nan: np.nan, 'True': 1, 'False': 0, 'None': 0},
-                      'WiFi': {np.nan: np.nan, 'paid': 2, 'None': 0, 'free': 1, 'no': 0}
+                      'WiFi': {np.nan: np.nan, 'paid': 0, 'None': 0, 'free': 1, 'no': 0}
                       }
