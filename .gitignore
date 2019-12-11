@@ -6,9 +6,12 @@
 __pycache__/
 .ipynb_checkpoints
 .idea
+.pkl
+.csv
 
 # Local folder for the data
-data/
+data/*
+!data/README.md
 data_pca/
 data_nn/
 
