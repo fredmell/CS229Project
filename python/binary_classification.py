@@ -7,7 +7,7 @@ import pandas as pd
 import time
 
 # Models
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegressionCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -221,22 +221,20 @@ class logreg(BinaryClassifier):
     '''
 
     def train(self, penalty = 'l2',
-                    C = 1.0,
+                    cv = 2,
                     solver = 'liblinear',
                     max_iter = 100,
-                    l1_ratio = None,
                     keep = True):
         '''
         Train logistic regression binary classifier
 
         @param penalty,  Optional: String, type of regularization
                          Default: 'l2'
-        @param C,        Optional: Float, Inverse of regularization strength, must be positive float
-                         Note: smaller values correspond to stronger regularization
+        @param cv,       Optional, int, number of cross validation folds
+                         Default: 2
         @param solver,   Optional: String, algorithm used for optimization
                          Default: 'saga', faster for large datasets
         @param max_iter, Optional: int, maximum iterations for solver to converge
-        @param l1_ratio  Optional: Float, Elastic-Net mixing parameter between (0, 1)
         @param keep,     Optional: Bool, if true save model, else return model
         '''
 
@@ -245,19 +243,11 @@ class logreg(BinaryClassifier):
 
         # Initialize non-elasticnet model
         if penalty != 'elasticnet':
-            model = LogisticRegression(penalty = penalty,
-                                       random_state = self.random_state,
-                                       C = C,
-                                       solver = solver,
-                                       max_iter = max_iter)
-        # Initialize elasticnet model
-        else:
-            model = LogisticRegression(penalty = penalty,
-                                       random_state = self.random_state,
-                                       C = C,
-                                       l1_ratio = l1_ratio,
-                                       solver = solver,
-                                       max_iter = max_iter)
+            model = LogisticRegressionCV(penalty = penalty,
+                                         random_state = self.random_state,
+                                         solver = solver,
+                                         max_iter = max_iter,
+                                         cv = cv)
 
         # Train model
         model.fit(self.train_data[self.predictors],
@@ -365,12 +355,14 @@ class AdaBoost(BinaryClassifier):
     '''
 
     def train(self, n_estimators = 50,
+                    base_depth = 1,
                     learning_rate = 1.0,
                     keep = True):
         '''
         Train AdaBoostClassifier
 
         @param n_estimators,  Optional: int, max number of estimators where boosting is stopped
+        @param base_depth,    Optional: int, depth of DecisionTreeClassifier base classifier
         @param learning_rate, Optional: float, shrinks the contribution of each classifier
         @param keep,         Optional: bool, if true, set model, if false, return model
         '''
@@ -379,7 +371,8 @@ class AdaBoost(BinaryClassifier):
         start = time.time()
 
         # Initialize model
-        model = AdaBoostClassifier(n_estimators = n_estimators,
+        model = AdaBoostClassifier(base_estimator = DecisionTreeClassifier(max_depth = base_depth),
+                                    n_estimators = n_estimators,
                                     learning_rate = learning_rate,
                                     random_state = self.random_state)
 
