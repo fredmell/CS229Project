@@ -9,3 +9,5 @@ Open Dataset and move files `review.json`, `user.json` and `business.json` to di
 python3 make_dataframe.py
 ```
 This should take while to run. Once complete, the dataframe is stored as a pickle in `data/yelp_df.pkl`.
+
+## Modeling
