@@ -89,3 +89,61 @@ def find_most_common_value(element_list):
             return np.nan
         else:
             return count.most_common(1)[0][0]
+
+def print_split(df):
+    # print('='*80)
+    # print('RAW REVIEWS DATASET DESCRIPTION')
+    # nb_reviews = len(review_df)
+    # pos_reviews = sum(review_df['label'])
+    # neg_revews = nb_reviews - pos_reviews
+
+    # print('Total reviews: {:,d}'.format(nb_reviews))
+    # print('Positive reviews: {:,d} ({:.2f}%)'.format(pos_reviews, 100*pos_reviews/nb_reviews))
+    # print('Negative reviews: {:,d} ({:.2f}%)'.format(neg_revews, 100*neg_revews/nb_reviews))
+    # print('='*80)
+    
+    print('='*80)
+    print('REVIEWS DATASET AFTER SPLIT DESCRIPTION')
+    nb_reviews = len(df)
+    pos_reviews = sum(df['label'])
+    neg_revews = nb_reviews - pos_reviews
+    train_reviews = len(df[df['dataset'] == 'train'])
+    val_reviews = len(df[df['dataset'] == 'val'])
+    test_reviews = len(df[df['dataset'] == 'test'])
+
+    print('Positive reviews: {:,d} ({:.2f}%)'.format(pos_reviews, 100*pos_reviews/nb_reviews))
+    print('Negative reviews: {:,d} ({:.2f}%)'.format(neg_revews, 100*neg_revews/nb_reviews))
+    print()
+    print('Train reviews: {:,d} ({:.2f}%)'.format(train_reviews, 100*train_reviews/nb_reviews))
+    print('Validation reviews: {:,d} ({:.2f}%)'.format(val_reviews, 100*val_reviews/nb_reviews))
+    print('Test reviews: {:,d} ({:.2f}%)'.format(test_reviews, 100*test_reviews/nb_reviews))
+    print('='*80)
+
+    print('TRAIN REVIEWS DATASET DESCRIPTION')
+    nb_reviews = len(df[df['dataset'] == 'train'])
+    pos_reviews = sum(df[df['dataset'] == 'train']['label'])
+    neg_revews = nb_reviews - pos_reviews
+
+    print('Total reviews: {:,d}'.format(nb_reviews))
+    print('Positive reviews: {:,d} ({:.2f}%)'.format(pos_reviews, 100*pos_reviews/nb_reviews))
+    print('Negative reviews: {:,d} ({:.2f}%)'.format(neg_revews, 100*neg_revews/nb_reviews))
+    print('='*80)
+
+    print('VALIDATION REVIEWS DATASET DESCRIPTION')
+    nb_reviews = len(df[df['dataset'] == 'val'])
+    pos_reviews = sum(df[df['dataset'] == 'val']['label'])
+    neg_revews = nb_reviews - pos_reviews
+
+    print('Total reviews: {:,d}'.format(nb_reviews))
+    print('Positive reviews: {:,d} ({:.2f}%)'.format(pos_reviews, 100*pos_reviews/nb_reviews))
+    print('Negative reviews: {:,d} ({:.2f}%)'.format(neg_revews, 100*neg_revews/nb_reviews))
+    print('='*80)
+
+    print('TEST REVIEWS DATASET DESCRIPTION')
+    nb_reviews = len(df[df['dataset'] == 'test'])
+    pos_reviews = sum(df[df['dataset'] == 'test']['label'])
+    neg_revews = nb_reviews - pos_reviews
+
+    print('Total reviews: {:,d}'.format(nb_reviews))
+    print('Positive reviews: {:,d} ({:.2f}%)'.format(pos_reviews, 100*pos_reviews/nb_reviews))
+    print('Negative reviews: {:,d} ({:.2f}%)'.format(neg_revews, 100*neg_revews/nb_reviews))
