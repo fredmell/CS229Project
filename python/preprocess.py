@@ -174,6 +174,9 @@ class Preprocess:
                                  other="test",
                                  inplace=True)
 
+    def print_split(self):
+        utils.print_split(df)
+
     def dump(self, filename="../data/yelp_df.pkl"):
         """ Dump current data frame to file named filename.
 
